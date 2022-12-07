@@ -30,9 +30,21 @@ def main() -> None:
         "A": HandSymbol.ROCK,
         "B": HandSymbol.PAPER,
         "C": HandSymbol.SCISSORS,
-        "X": HandSymbol.ROCK,
-        "Y": HandSymbol.PAPER,
-        "Z": HandSymbol.SCISSORS,
+        # "X": HandSymbol.ROCK,
+        # "Y": HandSymbol.PAPER,
+        # "Z": HandSymbol.SCISSORS,
+    }
+
+    get_winning_symbol = {
+        HandSymbol.ROCK: HandSymbol.PAPER,
+        HandSymbol.PAPER: HandSymbol.SCISSORS,
+        HandSymbol.SCISSORS: HandSymbol.ROCK,
+    }
+
+    get_losing_symbol = {
+        HandSymbol.ROCK: HandSymbol.SCISSORS,
+        HandSymbol.PAPER: HandSymbol.ROCK,
+        HandSymbol.SCISSORS: HandSymbol.PAPER,
     }
 
     score = 0
@@ -40,7 +52,17 @@ def main() -> None:
     with open(args.file, "r") as input:
         for line in input:
             opponent = symbol_map[line[0]]
-            me = symbol_map[line[2]]
+
+            # X: lose
+            # Y: draw
+            # Z: win
+            directive = line[2]
+            if directive == "X":
+                me = get_losing_symbol[opponent]
+            elif directive == "Z":
+                me = get_winning_symbol[opponent]
+            else:
+                me = opponent
 
             score += me.value
             if me is opponent:
