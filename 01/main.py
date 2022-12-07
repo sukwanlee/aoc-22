@@ -1,4 +1,5 @@
 import argparse
+import heapq
 
 from decimal import Decimal
 
@@ -12,19 +13,22 @@ def parse_cli_args() -> argparse.ArgumentParser:
 def main() -> None:
     args = parse_cli_args().parse_args()
 
-    max_cals = 0
+    max_cals = []
     current_cals = 0
 
     with open(args.file, "r") as input:
         for line in input:
             if line == "\n":
-                max_cals = max(max_cals, current_cals)
+                heapq.heappush(max_cals, current_cals)
+                if len(max_cals) > 3:
+                    heapq.heappop(max_cals)
                 current_cals = 0
             else:
                 current_cals += Decimal(line)
         
-    max_cals = max(max_cals, current_cals)
-    print(max_cals)
+    heapq.heappush(max_cals, current_cals)
+    heapq.heappop(max_cals)
+    print(sum(max_cals))
 
 
 if __name__ == "__main__":
